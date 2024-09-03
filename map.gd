@@ -43,34 +43,13 @@ func create_province_map_data_wide():
 		var position = positions[index]
 		index += 1
 		var neighbours = get_neighbours(position.x, position.y)
-		var highest_similarity = []
 		for neighbour in neighbours:
 			var similarity = calculate_similarity(position.x, position.y, neighbour.x, neighbour.y)
-			if highest_similarity.size() == 0 && similarity != 0:
-				highest_similarity.push_back({
-					"value": similarity,
-					"coords": neighbour
-				})
-			for current_highest in highest_similarity:
-				if similarity > current_highest.value:
-					highest_similarity = [{
-					"value": similarity,
-					"coords": neighbour
-					}]
-				if similarity == current_highest.value:
-					highest_similarity.push_back({
-						"value": similarity,
-						"coords": neighbour
-					})
-					break
-		if highest_similarity.size() != 0:
-			var highest_index = randi_range(0, highest_similarity.size()-1)
-			var cell = get_data(position.x, position.y)
-			set_data(highest_similarity[highest_index].coords.x, highest_similarity[highest_index].coords.y,"province_id", cell["province_id"])
-			positions.push_back(highest_similarity[highest_index].coords)
-			highest_similarity = []
-	
-
+			if similarity != 0:
+				var cell = get_data(position.x, position.y)
+				set_data(neighbour.x, neighbour.y,"province_id", cell["province_id"])
+				positions.push_back(neighbour)
+	print("Provinces completed")
 func get_neighbours(x, y):
 	var neighbours = [
 		Vector2(x+1, y),
