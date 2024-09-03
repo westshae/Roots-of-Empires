@@ -23,7 +23,7 @@ func create_province_map_data_wide():
 	
 	print("Start")
 	var province_count = 0
-	while province_count < 1000:
+	while province_count < 10000:
 		var random_x: int = rng.randi_range(0, width-1)
 		var random_y: int = rng.randi_range(0, height-1)
 		if within_bounds(random_x, random_y) && get_data(random_x, random_y)["Land"]:
@@ -44,8 +44,7 @@ func create_province_map_data_wide():
 		index += 1
 		var neighbours = get_neighbours(position.x, position.y)
 		for neighbour in neighbours:
-			var similarity = calculate_similarity(position.x, position.y, neighbour.x, neighbour.y)
-			if similarity != 0:
+			if calculate_similarity(position.x, position.y, neighbour.x, neighbour.y):
 				var cell = get_data(position.x, position.y)
 				set_data(neighbour.x, neighbour.y,"province_id", cell["province_id"])
 				positions.push_back(neighbour)
@@ -62,23 +61,20 @@ func get_neighbours(x, y):
 func calculate_similarity(main_x, main_y, next_x, next_y):
 	var score = 0
 	if !within_bounds(next_x, next_y):
-		return 0
+		return false
 	
 	var next_cell = get_data(next_x, next_y)
 	var main_cell = get_data(main_x, main_y)
 	if !next_cell["Land"]:
-		return 0
-	#if next_cell["province_id"]:
-		#return 0
+		return false
 	if next_cell.has("province_id"):
-		return 0
+		return false
+	if !next_cell["Hills"] && main_cell["Hills"]:
+		return false
+	if !next_cell["Mountains"] && main_cell["Mountains"]:
+		return false
 
-	score += int(next_cell["Hills"] && main_cell["Hills"])
-	score += int(!next_cell["Hills"] && !main_cell["Hills"])
-	score += int(next_cell["Mountains"] && main_cell["Mountains"])
-	score += int(!next_cell["Mountains"] && !main_cell["Mountains"])
-
-	return score
+	return true
 	
 func set_data(x:int, y:int, key:String, value):
 	if within_bounds(x, y):
