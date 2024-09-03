@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b5b65oksclipg"]
+
+[ext_resource type="Script" path="res://node.gd" id="1_dwbn1"]
+
+[node name="Node" type="Area2D"]
+script = ExtResource("1_dwbn1")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(33, -14, 126, 75, 28, 144, -112, 113, -48, 12)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
